@@ -10,7 +10,7 @@ beta = 0
 
 ans = ChM.not_weight(a, b) # данные для таблицы, ответы
 ans[0][0][4] = ans[1][0][4] = ans[2][0][4] = 0
-ans[0][0][5] = ans[1][0][5] = ans[2][0][5] = 0
+
 
 # таблица
 columns = ['N', 'h', 'S', 'E', 'R', "S'", 'p', "p'", 'pr']
@@ -20,7 +20,8 @@ plt.subplots_adjust(bottom=0.625, top=0.96, left=0.03, right=0.989)
 table = plt.table(cellText=ans[0], cellLoc="center", colLabels=columns)
 table.auto_set_font_size(False)
 table.set_fontsize(10)
-#plt.plot([np.log10(i) for i in ans[3]], [np.log10(i) for i in ans[6]], "b--")
+x = np.arange(-10, 2, 0.1)
+plt.plot([np.log10(i) for i in ans[3]], [np.log10(i) for i in ans[6]], 'r', x, 2*x, "k--")
 
 plt.figure(2) #трапеция
 plt.get_current_fig_manager().set_window_title("Метод трапеции")
@@ -28,6 +29,7 @@ plt.subplots_adjust(bottom=0.8, top=0.96, left=0.03, right=0.989)
 table = plt.table(cellText=ans[1], cellLoc="center", colLabels=columns)
 table.auto_set_font_size(False)
 table.set_fontsize(10)
+plt.plot([np.log10(i) for i in ans[4]], [np.log10(i) for i in ans[7]], 'r', x, 2*x, "k--")
 
 plt.figure(3)
 plt.get_current_fig_manager().set_window_title("Метод Симпсона")
@@ -35,6 +37,7 @@ plt.subplots_adjust(bottom=0.625, top=0.96, left=0.03, right=0.989)
 table = plt.table(cellText=ans[2], cellLoc="center", colLabels=columns)
 table.auto_set_font_size(False)
 table.set_fontsize(10)
+plt.plot([np.log10(i) for i in ans[5]], [np.log10(i) for i in ans[8]], 'r', x, 2*x, "k--")
 
 plt.show()
 

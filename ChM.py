@@ -42,6 +42,7 @@ def not_weight(a, b):
     ptr = 1
     R2 = 100
     etken = 0
+    pr = 0
     while abs(R2) > rtol:
         h = (b - a) / n
         z1 = a
@@ -60,13 +61,15 @@ def not_weight(a, b):
             etken11 = rng.eitken(pp3, pp2, s11)
 
 
-
         e = abs(ans0-s1)/ans0
-
-        ans1.append([n, round(h, 12), round(s1, 12), round(e, 12), round(abs(R2), 12), round(s11, 12),
-                     etken, etken11, 0])
         ansR1.append(abs(R2))
         ansh1.append(h)
+        if ptr > 2:
+            pr = (np.log10(ansR1[-1])-np.log10(ansR1[0]))/(np.log10(ansh1[-1])-np.log10(ansh1[0]))
+
+        ans1.append([n, round(h, 12), round(s1, 12), round(e, 12), round(abs(R2), 12), round(s11, 12),
+                     etken, etken11, pr])
+
         n = n * 2
         pp3 = pp2
         pp2 = s11
@@ -81,6 +84,7 @@ def not_weight(a, b):
     ptr = 1
     R2 = 100
     etken = 0
+    pr = 0
     while abs(R2) > rtol:
         h = (b - a) / n
         z1 = a
@@ -98,13 +102,16 @@ def not_weight(a, b):
 
         if ptr > 2:
             etken = rng.eitken(ll3, ll2, s2)
-            print(s22, pp2, pp3)
             etken22 = rng.eitken(pp3, pp2, s22)
         e = abs(ans0 - s2) / ans0
-        ans2.append([n, round(h, 12), round(s2, 12), round(e, 12), round(abs(R2), 12), round(s22, 12),
-                     etken, etken22, 0])
         ansR2.append(abs(R2))
         ansh2.append(h)
+
+        if ptr > 2:
+            pr = (np.log10(ansR2[-1])-np.log10(ansR2[0]))/(np.log10(ansh2[-1])-np.log10(ansh2[0]))
+        ans2.append([n, round(h, 12), round(s2, 12), round(e, 12), round(abs(R2), 12), round(s22, 12),
+                     etken, etken22, pr])
+
         n = n * 2
         pp3 = pp2
         pp2 = s22
@@ -117,6 +124,7 @@ def not_weight(a, b):
     ptr = 1
     R2 = 100
     etken = 0
+    pr = 0
     while abs(R2) > rtol:
         h = (b - a) / n
         z1 = a
@@ -135,10 +143,14 @@ def not_weight(a, b):
             etken = rng.eitken(ll3, ll2, s3)
             etken33 = rng.eitken(pp3, pp2, s33)
         e = abs(ans0 - s3) / ans0
-        ans3.append([n, round(h, 12), round(s3, 12), round(e, 12), round(abs(R2), 12), round(s33, 12),
-                     etken, etken33, 0])
         ansR3.append(abs(R2))
         ansh3.append(h)
+        if ptr > 2:
+            pr = (np.log10(ansR3[-1])-np.log10(ansR3[0]))/(np.log10(ansh3[-1])-np.log10(ansh3[0]))
+
+        ans3.append([n, round(h, 12), round(s3, 12), round(e, 12), round(abs(R2), 12), round(s33, 12),
+                     etken, etken33, pr])
+
         n = n * 2
         pp3 = pp2
         pp2 = s33
@@ -155,7 +167,7 @@ def not_weight(a, b):
 
     return [ans1, ans2, ans3, ansR1, ansR2, ansR3, ansh1, ansh2, ansh3]
 
-def with_weight(n, a, b):
+def with_weight(a, b):
     pass
 
 
