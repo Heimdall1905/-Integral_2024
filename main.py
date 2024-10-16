@@ -8,28 +8,29 @@ b = 3.3
 alfa = 2/3
 beta = 0
 
-ans = ChM.not_weight(a, b) # данные для таблицы, ответы
-ans[0][0][4] = ans[1][0][4] = ans[2][0][4] = 0
-
-
 # таблица
 columns = ['N', 'h', 'S', 'E', 'R', "S'", 'p', "p'", 'pr']
+x = np.arange(-10, 2, 0.1)
+
+'''ans = ChM.not_weight(a, b) # данные для таблицы, ответы
+ans[0][0][4] = ans[1][0][4] = ans[2][0][4] = 0
+
 plt.figure(1) # прямоугольник
 plt.get_current_fig_manager().set_window_title("Метод прямоугольника")
 plt.subplots_adjust(bottom=0.625, top=0.96, left=0.03, right=0.989)
 table = plt.table(cellText=ans[0], cellLoc="center", colLabels=columns)
 table.auto_set_font_size(False)
 table.set_fontsize(10)
-x = np.arange(-10, 2, 0.1)
-plt.plot([np.log10(i) for i in ans[3]], [np.log10(i) for i in ans[6]], 'r', x, 2*x, "k--")
+plt.plot([np.log10(i) for i in ans[6]], [np.log10(i) for i in ans[3]], 'r', x, 2*x, "k--")
 
-plt.figure(2) #трапеция
+
+plt.figure(2)  # трапеция
 plt.get_current_fig_manager().set_window_title("Метод трапеции")
 plt.subplots_adjust(bottom=0.8, top=0.96, left=0.03, right=0.989)
 table = plt.table(cellText=ans[1], cellLoc="center", colLabels=columns)
 table.auto_set_font_size(False)
 table.set_fontsize(10)
-plt.plot([np.log10(i) for i in ans[4]], [np.log10(i) for i in ans[7]], 'r', x, 2*x, "k--")
+plt.plot([np.log10(i) for i in ans[7]], [np.log10(i) for i in ans[4]], 'r', x, 2*x, "k--")
 
 plt.figure(3)
 plt.get_current_fig_manager().set_window_title("Метод Симпсона")
@@ -37,22 +38,25 @@ plt.subplots_adjust(bottom=0.625, top=0.96, left=0.03, right=0.989)
 table = plt.table(cellText=ans[2], cellLoc="center", colLabels=columns)
 table.auto_set_font_size(False)
 table.set_fontsize(10)
-plt.plot([np.log10(i) for i in ans[5]], [np.log10(i) for i in ans[8]], 'r', x, 2*x, "k--")
+plt.plot([np.log10(i) for i in ans[8]], [np.log10(i) for i in ans[5]], 'r', x, 4*x, "k--")
 
-plt.show()
+plt.show()'''
 
+ans_with_weight = ChM.with_weight(a, b, alfa, beta)
+ans_with_weight[0][0][4] = 0
 
-'''for i in range(3):
-    if i == 0:
-        print("Метод прямоугольника")
-    if i == 1:
-        print("Метод трапеции")
-    if i == 2:
-        print("Метод Симпсона")
-    for j in range(len(ans[i])):
-        print(ans[i][j])'''
+'''plt.figure(4)
+plt.xlim([-4, 0])
+plt.get_current_fig_manager().set_window_title("Метод Ньютона-Котса")
+plt.subplots_adjust(bottom=0.625, top=0.96, left=0.03, right=0.989)
+table = plt.table(cellText=ans_with_weight[0], cellLoc="center", colLabels=columns)
+table.auto_set_font_size(False)
+table.set_fontsize(10)
+plt.plot([np.log10(i) for i in ans_with_weight[4]], [np.log10(i) for i in ans_with_weight[2]], 'y',
+         x, 3*x, 'r--', x, 4*x, 'b--')
 
-
+plt.show()'''
+print(ans_with_weight[1])
 
 
 
