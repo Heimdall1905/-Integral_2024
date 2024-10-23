@@ -5,7 +5,7 @@ m_square = 2
 m_trapezoid = 2
 m_simpson = 4
 m_newton = 3  #АСТ не менее, чем n-1(n=3), так что m не менее n
-m_gauss = 1
+m_gauss = 6
 
 def foo_1(s1, s2):
     a = s2 - s1
@@ -35,6 +35,22 @@ def foo_4(s1, s2):
     a = s2 - s1
     b = 1 - pow(L, -1*m_newton)
     c = pow(L, m_newton) - 1
+    R1 = a/b
+    R2 = a/c
+    return [R1, R2]
+
+def foo_4_r(s1, s2, m):
+    a = s2 - s1
+    b = 1 - pow(L, -1*m)
+    c = pow(L, m) - 1
+    R1 = a/b
+    R2 = a/c
+    return [R1, R2]
+
+def foo_5(s1, s2):
+    a = s2 - s1
+    b = 1 - pow(L, -1*m_gauss)
+    c = pow(L, m_gauss) - 1
     R1 = a/b
     R2 = a/c
     return [R1, R2]

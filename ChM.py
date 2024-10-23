@@ -3,11 +3,15 @@ import Runge as rng
 import sympy as sp
 
 ans0 = 7.71356710860380874809
+ans0_0 = 20.730271109552231026
 rtol = pow(10, -10)
 hard_kostyl = [20.7569054909183, 20.7322076167714, 20.7304172892537, 20.7302827474845, 20.7302720865815, 20.7302711954671, 20.7302711173915, 20.7302711102877, 20.7302711096218, 20.7302711095582]
 
 def f(x):
     return 3*np.cos(1.5*x)*np.exp(x/4) + 4*np.sin(3.5*x)*np.exp(-3*x) + 4*x
+
+def f_11(x):
+    return 3*np.cos(1.5*(x + 2.5))*np.exp((x + 2.5)/4) + 4*np.sin(3.5*(x + 2.5))*np.exp(-3*(x + 2.5)) + 4*(x + 2.5)
 
 def f1(k0, k1): # прямоугольник
     return (k1-k0)*f((k0+k1)/2)
@@ -39,25 +43,27 @@ def newton(z0, z1, a, alfa):
 
     return vvv
 
-def gauss(z0, z1, a, alfa):
+def gauss(z0, z1, a):
     zi = (z0 + z1) / 2
     t = sp.symbols('t')
 
-    u0 = (pow(z1 - a, 1 - alfa) - pow(z0 - a, 1 - alfa)) / (1 - alfa)
+    fk = pow(t, 1 - a) / (1 - a)
+    u0 = fk.subs(t, z1) - fk.subs(t, z0)
 
-    u1 = (pow(z1 - a, 2 - alfa) - pow(z0 - a, 2 - alfa)) / (2 - alfa) + a * u0
+    fk = pow(t, 2 - a) / (2 - a)
+    u1 = fk.subs(t, z1) - fk.subs(t, z0)
 
-    u2 = (pow(z1 - a, 3 - alfa) - pow(z0 - a, 3 - alfa)) / (3 - alfa) + 2 * a * u1 - a * a * u0
+    fk = pow(t, 3 - a) / (3 - a)
+    u2 = fk.subs(t, z1) - fk.subs(t, z0)
 
-    a = alfa
-    fk = -1*pow(t, 4-a) / (a - 4)
-    u3 = fk.subs(t, z1-z0) - fk.subs(t, 0)
+    fk = pow(t, 4 - a) / (4 - a)
+    u3 = fk.subs(t, z1) - fk.subs(t, z0)
 
-    fk = -1 * pow(t, 5 - a) / (a - 5)
-    u4 = fk.subs(t, z1 - z0) - fk.subs(t, 0)
+    fk = pow(t, 5 - a) / (5 - a)
+    u4 = fk.subs(t, z1) - fk.subs(t, z0)
 
-    fk = -1 * pow(t, 6 - a) / (a - 6)
-    u5 = fk.subs(t, z1 - z0) - fk.subs(t, 0)
+    fk = pow(t, 6 - a) / (6 - a)
+    u5 = fk.subs(t, z1) - fk.subs(t, z0)
 
     a0 = sp.symbols('a0')
     a1 = sp.symbols('a1')
@@ -66,6 +72,7 @@ def gauss(z0, z1, a, alfa):
     system_1 = [ sp.Eq(a0 * u0 + a1 * u1 + a2 * u2, -u3),
                  sp.Eq(a0 * u1 + a1 * u2 + a2 * u3, -u4),
                  sp.Eq(a0 * u2 + a1 * u3 + a2 * u4, -u5)]
+
     arr = sp.solve(system_1, (a0, a1, a2))
     brr = sp.solve(
         sp.Eq(t**3 + arr[a2]*pow(t, 2) + arr[a1]*t + arr[a0], 0))
@@ -78,10 +85,9 @@ def gauss(z0, z1, a, alfa):
                  sp.Eq(a0 * x1 * x1 + a1 * x2 * x2 + a2 * x3 * x3, u2)]
     arr = sp.solve(my_system, (a0, a1, a2))
 
-    vvv = arr[a0] * f(z0) + arr[a1] * f(zi) + arr[a2] * f(z1)
+    vvv = arr[a0] * f_11(float(sp.re(x1))) + arr[a1] * f_11(float(sp.re(x2))) + arr[a2] * f_11(float(sp.re(x3)))
 
     return vvv
-
 
 def not_weight(a, b):
     ans1 = []
@@ -272,14 +278,20 @@ def with_weight(a, b, alfa, beta):
         s1 = hard_kostyl[ptr - 1]
 
         if ptr > 1:
-            R1, R2 = rng.foo_4(ll2, s1)
-            s11 = s1 + R2
-            R2 /= ans0
-        if ptr > 2:
-            etken = rng.eitken(ll3, ll2, s1)
-            etken11 = rng.eitken(pp3, pp2, s11)
+            if ptr > 2:
+                etken = rng.eitken(ll3, ll2, s1)
+                R1, R2 = rng.foo_4_r(ll2, s1, etken)
+                s11 = s1 + R2
+                etken11 = rng.eitken(pp3, pp2, s11)
+                R2 /= ans0_0
 
-        e = abs(ans0 - s1) / ans0
+            else:
+                R1, R2 = rng.foo_4(ll2, s1)
+                s11 = s1 + R2
+                R2 /= ans0_0
+
+
+        e = abs(ans0_0 - s1) / ans0_0
         ansR1.append(float(abs(R2)))
         ansh1.append(float(h))
         if ptr > 2:
@@ -306,35 +318,40 @@ def with_weight(a, b, alfa, beta):
     R2 = 100
     etken = 0
     pr = 0
-    for lll228 in range(3):
+    while abs(R2) > rtol:
         h = (b - a) / n
-        z1 = a
+        z1 = 0
         s2 = 0
 
         for j in range(1, n+1): # Считаем интеграл с весом с N шагов
             z0 = z1
             z1 += h
-            s2 += gauss(z0, z1, a, alfa)
+            s2 += gauss(z0, z1, alfa)
             lk += 1
-        print(lk)
+        #print(lk)
 
+        if ptr > 1:
+            if ptr > 2:
+                etken = rng.eitken(ll3, ll2, s2)
+                R1, R2 = rng.foo_4_r(ll2, s2, etken)
+                s22 = s2 + R2
+                etken22 = rng.eitken(pp3, pp2, s22)
+                R2 /= ans0_0
 
-        '''if ptr > 1:
-            R1, R2 = rng.foo_4(ll2, s2)
-            s22 = s2 + R2
-            R2 /= ans0
-        if ptr > 2:
-            etken = rng.eitken(ll3, ll2, s2)
-            etken11 = rng.eitken(pp3, pp2, s22)
+            else:
+                R1, R2 = rng.foo_4(ll2, s2)
+                s22 = s2 + R2
+                R2 /= ans0_0
 
-        e = abs(ans0 - s2) / ans0
+        e = abs(ans0_0 - s2) / ans0_0
         ansR2.append(float(abs(R2)))
         ansh2.append(float(h))
         if ptr > 2:
-            pr = (np.log10(ansR2[-2]) - np.log10(ansR2[-1])) / (np.log10(ansh2[-2]) - np.log10(ansh2[-1]))'''
+            pr = (np.log10(ansR2[-2]) - np.log10(ansR2[-1])) / (np.log10(ansh2[-2]) - np.log10(ansh2[-1]))
 
-        ans2.append([n, round(h, 12), s2, round(e, 12), 0, 0,
-                     0, 0, 0])
+        ans2.append([n, round(h, 12), s2, round(e, 12), round(R2, 12), round(s22, 12),
+                     round(etken, 12), round(etken22), pr])
+
 
         n *= 2
         pp3 = pp2
