@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 import numpy as np
-
 import ChM
 
 a = 2.5
@@ -48,7 +47,7 @@ plt.plot([np.log10(i) for i in ans[8]], [np.log10(i) for i in ans[5]], 'r', x, 4
 
 
 
-'''ans_with_weight = ChM.with_weight(a, b, alfa, beta)
+ans_with_weight = ChM.with_weight(a, b, alfa, beta)
 ans_with_weight[0][0][4] = ans_with_weight[1][0][4] = 0
 ans_with_weight[4].pop(0)
 ans_with_weight[2].pop(0)
@@ -74,7 +73,7 @@ table = plt.table(cellText=ans_with_weight[1], cellLoc="center", colLabels=colum
 table.auto_set_font_size(False)
 table.set_fontsize(10)
 plt.plot([np.log10(i) for i in ans_with_weight[5]], [np.log10(i) for i in ans_with_weight[3]], 'y',
-         x, 6*x, 'b--')'''
+         x, 6*x, 'b--')
 
 plt.show()
 
